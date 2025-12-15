@@ -222,6 +222,23 @@ let guess: u32 = guess
 - **`.parse()`** — Converts the string to another type (inferred from `u32` annotation)
 - **`u32`** — An unsigned 32-bit integer
 
+##### Handling Invalid Input with `match` and `continue`
+
+Instead of crashing on invalid input, use `match` to handle errors gracefully:
+
+```rust
+let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => continue,
+};
+```
+
+- **`Ok(num)`** — If parsing succeeds, extract the number
+- **`Err(_)`** — If parsing fails (e.g., user types "abc"), the `_` catches any error
+- **`continue`** — Skips to the next loop iteration, asking for input again
+
+This allows the game to keep running even when users enter non-numeric input.
+
 ##### Shadowing for Type Conversion
 
 Notice `guess` is redeclared — this is **shadowing**, which lets you reuse the variable name with a new type:
@@ -244,3 +261,35 @@ loop {
 
 - Runs forever until explicitly broken with `break`
 - Useful for games or programs that need to repeat until a condition is met
+
+#### Breaking Out of Loops with `break`
+
+Use `break` to exit a loop when a condition is met:
+
+```rust
+match guess.cmp(&secret_number) {
+    Ordering::Less => println!("Too small!"),
+    Ordering::Greater => println!("Too big!"),
+    Ordering::Equal => {
+        println!("You win!");
+        break;  // Exit the loop
+    }
+}
+```
+
+- **`break`** — Immediately exits the innermost loop
+- Can be used inside `loop`, `while`, and `for` loops
+- Often combined with `match` or `if` to exit on a specific condition
+
+##### Using `break` with Values
+
+`loop` can return a value when breaking:
+
+```rust
+let result = loop {
+    counter += 1;
+    if counter == 10 {
+        break counter * 2;  // Returns 20
+    }
+};
+```
